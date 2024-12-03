@@ -1,0 +1,32 @@
+{
+  "name": "weh",
+  "version": "1.0.0",
+  "description": "wallpaper engine helper",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/maximelianenko/weh.git"
+  },
+  "keywords": [
+    "wallpaper engine",
+    "config",
+    "generator"
+  ],
+  "author": "maximelianenko",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/maximelianenko/weh/issues"
+  },
+  "homepage": "https://github.com/maximelianenko/weh#readme",
+  "dependencies": {
+    "browser-or-node": "^3.0.0",
+    "color": "^4.2.3",
+    "lodash": "^4.17.21",
+    "yaml": "^2.6.1"
+  }
+}
