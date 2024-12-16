@@ -1,7 +1,7 @@
 import { properties as properties_, localization as localization_ } from "./index.js"
-const preview = (project) => {
-	console.log(project)
-}
+// const preview = (project) => {
+// 	console.log(project)
+// }
 
 const we = (template) => {
   const project = {...template.project}
@@ -42,4 +42,4 @@ const we = (template) => {
 
   return {project,properties}
 }
-export {we,preview}
+export {we}

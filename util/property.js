@@ -1,6 +1,5 @@
 import * as string from "./string.js"
 import * as float from "./float.js"
-import * as int from "./int.js"
 
 import Color from "color"
 
@@ -19,9 +18,20 @@ const identify = (property) => {
 	const {value,params} = unwrap(property)
 	const type = typeof value
 	if (type === "string") {
-		if (params !== null && params.type === "text") {
-			return {type: "text",value,params}
-		}
+    if (params !== null) {
+      if (params.type === "text") {
+        return {type: "text",value,params}
+      }
+      if (params.type === "file") {
+        return {type: "file",value,params}
+      }
+      if (params.type === "directory") {
+        if (params.mode !== undefined) {
+          return {type: "directory",value,params}
+        }
+        return {type: "directory",value,params:{...params, mode:"fetchall"}}
+      }
+    }
 		const {type: exact_type, color} = string.identify(value)
 		if (color !== undefined) {
 			return {type: exact_type,color,value,params}
@@ -107,7 +117,7 @@ const format_number = (value,params) => {
   }
   return format_float(value,params)
 }
-
+ 
 const format_string = (value) => {
   return {
     value,
@@ -124,22 +134,47 @@ const format_text = (value) => {
     }
   }
 }
+const format_file = (value) => {
+  return {
+    value,
+    params:{
+      type: "file"
+    }
+  }
+}
+const format_directory = (value,params) => {
+  return {
+    value,
+    params:{
+      type: "directory",
+      mode: params.mode
+    }
+  }
+}
 const format = (property) => {
   const {type,value,params} = identify(property)
   if (type === "boolean") {
     return format_boolean(value)
   }
 
-  else if (type === "string") {
+  if (type === "string") {
     return format_string(value,params)
   }
 
-  else if (type === "color") {
+  if (type === "color") {
     return format_color(value)
   }
 
-  else if (type === "number") {
+  if (type === "number") {
     return format_number(value,params)
+  }
+
+  if (type === "file") {
+    return format_file(value)
+  }
+
+  if (type === "directory") {
+    return format_directory(value,params)
   }
 
   return format_text(value)

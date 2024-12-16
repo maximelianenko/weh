@@ -1,12 +1,15 @@
 {
-  "name": "weh",
-  "version": "1.0.0",
+  "name": "@maximelianenko/weh",
+  "version": "1.0.2",
   "description": "wallpaper engine helper",
   "main": "index.js",
   "type": "module",
   "scripts": {
     "dev": "node index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
+  },
+  "jest": {
+    "transform": {}
   },
   "repository": {
     "type": "git",
@@ -24,9 +27,11 @@
   },
   "homepage": "https://github.com/maximelianenko/weh#readme",
   "dependencies": {
-    "browser-or-node": "^3.0.0",
     "color": "^4.2.3",
-    "lodash": "^4.17.21",
+    "lodash": "^4.17.21"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
     "yaml": "^2.6.1"
   }
 }

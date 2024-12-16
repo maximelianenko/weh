@@ -1,8 +1,8 @@
 import * as property from "./property.js"
 import * as conditions from "./conditions.js"
 import * as localization from "./localization.js"
+import {GROUP_AS_TEXT, NESTING_ENABLED, NESTING_SYMBOL} from "./constants.js"
 
-import { NESTING_ENABLED,NESTING_SYMBOL } from "./constants.js"
 const flatten = (stack, properties = []) => {
   const {current,path,conditions,level,group} = stack
   let conditions_ = conditions
@@ -11,8 +11,6 @@ const flatten = (stack, properties = []) => {
 	const label_we = "ui_" + key_we
 
   if (current?.options !== undefined && Array.isArray(current.options)) {
-    // const key_we = path.join("_")
-    // const label_we = "ui_" + key_we
     properties.push({
       property: {
         value: current.value || 0,
@@ -34,12 +32,7 @@ const flatten = (stack, properties = []) => {
         a: path,
         b: i,
       }]
-			/*
 
-			!!!!! mb level+1 !!!!!
-
-
-			*/
       flatten({current:option,path:[...path,"options",i],conditions:conditions_,level:level,group: false},properties) 
     }
 
@@ -47,8 +40,6 @@ const flatten = (stack, properties = []) => {
   }
 
   if (typeof current !== "object" || current?.value !== undefined) {
-    // const key_we = path.join("_")
-    // const label_we = "ui_" + key_we
     properties.push({
       property: property.format(current),
       key: key_we,
@@ -60,8 +51,6 @@ const flatten = (stack, properties = []) => {
     return
   }
 
-  // const key_we = path.join("_")
-  // const label_we = "ui_" + key_we
   if (group === true) {
     properties.push({
       property: {
@@ -90,17 +79,24 @@ const flatten = (stack, properties = []) => {
   return properties
 }
 
-const we = (properties) => {
+const we = (properties,group_as_text) => {
   const result = {}
-  let i = 0
+  
+	const group_type = (() => {
+		if (typeof group_as_text === "boolean" ? group_as_text : GROUP_AS_TEXT) {
+			return "text"
+		}
+		return "bool"
+	})()
+
+	let i = 0
   for (let value of properties) {
     const property = value.property
     const params = {...property.params}
 
     const order = 100 + i
-    // const condition = WEH.prototype.util.conditions_we(value.conditions)
     if (params.type === "group") {
-      params.type = "bool"
+			params.type = group_type
     }
     
     else if (params.type === "combo") {
@@ -134,9 +130,9 @@ const with_localization = (properties_,localization_,nesting) => {
   if (nesting_enabled) {
     for (let value of properties) {
       const value_new = {...value}
+
       const localization__ = localization.by_path(localization_,value.path)
       for (const language in localization__) {
-        // localization[language].
         const value_ = localization__[language]
         const nesting = nesting_symbol.repeat(value.level)
         localization__[language] = {
@@ -145,6 +141,7 @@ const with_localization = (properties_,localization_,nesting) => {
           combined: nesting + value_
         }
       }
+      
       value_new.localization = localization__
       result.push(value_new)
     }
@@ -170,7 +167,8 @@ const all = (template) => {
   const localization = template.localization
   const nesting = template?.settings?.nesting
   const properties = with_localization(properties_,localization,nesting)
-  const properties_we = we(properties)
+	const group_as_text = template?.settings?.group?.text
+  const properties_we = we(properties,group_as_text)
   return {properties,properties_we}
 }
 
