@@ -1,4 +1,4 @@
-import {int} from "./index.js"
+import * as int from "./int.js"
 
 const into = (value) => {
   const num = Number.parseFloat(value)

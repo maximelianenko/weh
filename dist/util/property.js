@@ -142,42 +142,33 @@ const format_file = (value) => {
     }
   }
 }
-const format_directory = (value,params) => {
+const format_directory = (value,mode) => {
   return {
     value,
     params:{
       type: "directory",
-      mode: params.mode
+      mode
     }
   }
 }
 const format = (property) => {
   const {type,value,params} = identify(property)
-  if (type === "boolean") {
-    return format_boolean(value)
+  switch (type) {
+    case "boolean":
+      return format_boolean(value)
+    case "string":
+      return format_string(value,params)
+    case "color":
+      return format_color(value)
+    case "number":
+      return format_number(value,params)
+    case "file":
+      return format_file(value)
+    case "directory":
+      return format_directory(value,params.mode)
+    default:
+      return format_text(value)
   }
-
-  if (type === "string") {
-    return format_string(value,params)
-  }
-
-  if (type === "color") {
-    return format_color(value)
-  }
-
-  if (type === "number") {
-    return format_number(value,params)
-  }
-
-  if (type === "file") {
-    return format_file(value)
-  }
-
-  if (type === "directory") {
-    return format_directory(value,params)
-  }
-
-  return format_text(value)
 }
 
 

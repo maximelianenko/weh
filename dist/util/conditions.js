@@ -16,4 +16,5 @@ const we = (conditions) => {
   result += cond(condition.a,condition.b)
   return result
 }
+
 export {we}
